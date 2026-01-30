@@ -1,0 +1,3 @@
+﻿src/components/profile/GalleryTab.tsx(45,15): error TS2304: Cannot find name 'loadPhotos'.
+src/components/profile/WorkoutPlanTab.tsx(141,41): error TS2552: Cannot find name 'sessionIdx'. Did you mean 'sessionIndex'?
+src/components/profile/WorkoutPlanTab.tsx(160,18): error TS2552: Cannot find name 'sessionIdx'. Did you mean 'sessionIndex'?

@@ -1,0 +1,118 @@
+﻿
+> web@0.1.0 lint
+> eslint
+
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\app\(dashboard)\admin\coaches\page.tsx
+   2:10  warning  'Users' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   2:17  warning  'Search' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   2:25  warning  'Filter' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   2:53  warning  'Activity' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   4:15  warning  'Coach' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  48:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\app\(dashboard)\admin\page.tsx
+   2:10  warning  'Search' is defined but never used        @typescript-eslint/no-unused-vars
+  11:69  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:60  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\app\(dashboard)\coach\clients\page.tsx
+  84:38  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\app\page.tsx
+  126:31  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\admin\GlobalSearch.tsx
+  3:10  warning  'GlassCard' is defined but never used  @typescript-eslint/no-unused-vars
+  5:10  warning  'cn' is defined but never used         @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\admin\IntelligenceEngine.tsx
+  4:50  warning  'Phone' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\admin\MasterList.tsx
+   5:10  warning  'Search' is defined but never used                               @typescript-eslint/no-unused-vars
+   5:18  warning  'Loader2' is defined but never used                              @typescript-eslint/no-unused-vars
+  55:79  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\layout\Sidebar.tsx
+  3:49  warning  'Menu' is defined but never used          @typescript-eslint/no-unused-vars
+  3:55  warning  'LogOut' is defined but never used        @typescript-eslint/no-unused-vars
+  3:63  warning  'ChevronRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\ClientProfile.tsx
+   7:96  warning  'X' is defined but never used             @typescript-eslint/no-unused-vars
+  45:53  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  45:69  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\GalleryTab.tsx
+    6:49  warning  'Download' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+    6:59  warning  'Plus' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+    6:65  warning  'X' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+    8:10  warning  'cn' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   10:40  warning  'client' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   25:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\GalleryTab.tsx:25:9
+  23 |
+  24 |     useEffect(() => {
+> 25 |         loadPhotos();
+     |         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  26 |     }, [loadPhotos]);
+  27 |
+  28 |     const handleUpload = async () => {  react-hooks/set-state-in-effect
+   87:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @next/next/no-img-element
+  109:50  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react/no-unescaped-entities
+  109:61  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react/no-unescaped-entities
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\IdentityTab.tsx
+   5:63  warning  'User' is defined but never used      @typescript-eslint/no-unused-vars
+   5:83  warning  'X' is defined but never used         @typescript-eslint/no-unused-vars
+  10:31  warning  'clientId' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\LifestyleTab.tsx
+  4:23  warning  'Smile' is defined but never used     @typescript-eslint/no-unused-vars
+  9:32  warning  'clientId' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\PhysiqueTab.tsx
+  7:31  warning  'clientId' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\ProgressTab.tsx
+    6:39  warning  'ArrowRight' is defined but never used                                                                       @typescript-eslint/no-unused-vars
+    6:51  warning  'Plus' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+    6:57  warning  'RefreshCw' is defined but never used                                                                        @typescript-eslint/no-unused-vars
+   53:8   warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  145:54  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                              react/no-unescaped-entities
+  145:68  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                              react/no-unescaped-entities
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\StrategyTab.tsx
+  4:71  warning  'X' is defined but never used         @typescript-eslint/no-unused-vars
+  9:31  warning  'clientId' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\SubscriptionTab.tsx
+  5:32  warning  'Clock' is defined but never used     @typescript-eslint/no-unused-vars
+  9:35  warning  'clientId' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\profile\WorkoutPlanTab.tsx
+    2:38  warning  'useCallback' is defined but never used         @typescript-eslint/no-unused-vars
+    3:20  warning  'Calendar' is defined but never used            @typescript-eslint/no-unused-vars
+    3:35  warning  'Layout' is defined but never used              @typescript-eslint/no-unused-vars
+    3:56  warning  'Plus' is defined but never used                @typescript-eslint/no-unused-vars
+    3:70  warning  'Search' is defined but never used              @typescript-eslint/no-unused-vars
+  104:34  warning  'clientId' is defined but never used            @typescript-eslint/no-unused-vars
+  104:44  warning  'client' is defined but never used              @typescript-eslint/no-unused-vars
+  107:12  warning  'isLoading' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\components\ui\NeonButton.tsx
+  12:5  warning  'glow' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Drvgon\Desktop\SuperPinkDashboard\src\lib\api.ts
+  230:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 58 problems (12 errors, 46 warnings)
+

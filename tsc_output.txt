@@ -1,0 +1,4 @@
+﻿src/components/profile/GalleryTab.tsx(37,13): error TS2353: Object literal may only specify known properties, and 'notes' does not exist in type '{ client_id: number; photo_url: string; type: string; date: string; }'.
+src/components/profile/GalleryTab.tsx(41,15): error TS2304: Cannot find name 'loadPhotos'.
+src/components/profile/WorkoutPlanTab.tsx(275,74): error TS2552: Cannot find name 'sessionIndex'. Did you mean 'sessionIdx'?
+src/components/profile/WorkoutPlanTab.tsx(276,86): error TS2552: Cannot find name 'sessionIndex'. Did you mean 'sessionIdx'?
