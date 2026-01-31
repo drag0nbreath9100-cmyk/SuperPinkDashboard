@@ -8,10 +8,12 @@ export async function middleware(request: NextRequest) {
     // 1. Redirect to login if no user and trying to access protected routes
     const protectedPaths = ["/admin", "/head-coach", "/coach", "/approval-pending"];
     const isProtectedRoute = protectedPaths.some((p) => path.startsWith(p));
+    const isRootPage = path === "/";
     const isAuthPage = path.startsWith("/login") || path.startsWith("/signup");
     const isPendingPage = path.startsWith("/approval-pending");
 
-    if (!user && isProtectedRoute) {
+    // Redirect unauthenticated users from root or protected routes to login
+    if (!user && (isProtectedRoute || isRootPage)) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
@@ -43,8 +45,8 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/coach", request.url));
     }
 
-    // 5. Redirect logged-in users away from login/signup page
-    if (user && isAuthPage) {
+    // 5. Redirect logged-in users away from login/signup page AND root page
+    if (user && (isAuthPage || isRootPage)) {
         if (profile?.status === 'pending') return NextResponse.redirect(new URL("/approval-pending", request.url));
 
         const role = profile?.role || "coach";
