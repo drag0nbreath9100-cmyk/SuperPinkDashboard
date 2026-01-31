@@ -456,7 +456,16 @@ export const api = {
 
     getDashboardStats: async () => {
         if (!isSupabaseConfigured()) {
-            return { activeClients: 0, monthlyRevenue: 0, pendingAlerts: 0, revenueByPlan: [], weeklyRevenue: [], recentActivity: [] };
+            return {
+                activeClients: 0,
+                monthlyRevenue: 0,
+                pendingAlerts: 0,
+                revenueByPlan: [],
+                weeklyRevenue: [],
+                recentActivity: [],
+                teamAdherence: 0,
+                teamAdherenceDetails: { totalScore: 0, reviewRate: 0, onboardingRate: 0, activeRate: 0 }
+            };
         }
 
         try {
@@ -616,7 +625,16 @@ export const api = {
             };
         } catch (error) {
             console.error("Error getting stats:", error);
-            return { activeClients: 0, monthlyRevenue: 0, pendingAlerts: 0, revenueByPlan: [], revenueOverTime: [], revenueByYear: [] };
+            return {
+                activeClients: 0,
+                monthlyRevenue: 0,
+                pendingAlerts: 0,
+                revenueByPlan: [],
+                revenueOverTime: [],
+                revenueByYear: [],
+                teamAdherence: 0,
+                teamAdherenceDetails: { totalScore: 0, reviewRate: 0, onboardingRate: 0, activeRate: 0 }
+            };
         }
     },
 
