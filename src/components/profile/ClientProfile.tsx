@@ -67,22 +67,22 @@ export function ClientProfile({ clientId, client }: { clientId: string, client: 
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row gap-8 items-start mb-12 animate-in slide-in-from-bottom duration-700 relative group">
                 {/* Initials Avatar */}
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.4)] ring-2 ring-white/10 shrink-0">
-                    <span className="text-3xl font-bold text-white uppercase">{headerData.full_name ? headerData.full_name.substring(0, 2) : 'CL'}</span>
+                <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.4)] ring-2 ring-white/10 shrink-0">
+                    <span className="text-xl md:text-3xl font-bold text-white uppercase">{headerData.full_name ? headerData.full_name.substring(0, 2) : 'CL'}</span>
                 </div>
 
                 <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2 md:gap-3">
                         {isHeaderEditing ? (
                             <input
                                 type="text"
                                 value={headerData.full_name}
                                 onChange={(e) => setHeaderData({ ...headerData, full_name: e.target.value })}
-                                className="text-4xl font-bold text-white bg-transparent border-b border-white/20 px-0 w-full max-w-md focus:outline-none focus:border-secondary transition-all"
+                                className="text-2xl md:text-4xl font-bold text-white bg-transparent border-b border-white/20 px-0 w-full max-w-md focus:outline-none focus:border-secondary transition-all"
                                 autoFocus
                             />
                         ) : (
-                            <h1 className="text-4xl font-bold text-white tracking-tight">{headerData.full_name || 'Unknown Client'}</h1>
+                            <h1 className="text-2xl md:text-4xl font-bold text-white tracking-tight">{headerData.full_name || 'Unknown Client'}</h1>
                         )}
 
                         <div className="relative group/status">
@@ -126,11 +126,11 @@ export function ClientProfile({ clientId, client }: { clientId: string, client: 
                     </p>
                 </div>
 
-                <div className="flex gap-3">
-                    <button className="btn-electric bg-transparent border-white/10 !bg-none hover:bg-white/5 shadow-none hover:shadow-none">
+                <div className="flex gap-2 md:gap-3 w-full md:w-auto">
+                    <button className="btn-electric bg-transparent border-white/10 !bg-none hover:bg-white/5 shadow-none hover:shadow-none flex-1 md:flex-none text-sm md:text-base">
                         Message
                     </button>
-                    <a href={`/clients/${clientId}/check-in`} className="btn-electric flex items-center justify-center">
+                    <a href={`/clients/${clientId}/check-in`} className="btn-electric flex items-center justify-center flex-1 md:flex-none text-sm md:text-base">
                         Check-in
                     </a>
                 </div>
