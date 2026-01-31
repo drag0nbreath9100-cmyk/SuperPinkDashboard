@@ -97,7 +97,18 @@ async function getData() {
     } catch (e) {
         console.error("Failed to fetch admin data", e);
         return {
-            stats: { activeClients: 0, monthlyRevenue: 0, pendingAlerts: 0, teamAdherence: 100 },
+            stats: {
+                activeClients: 0,
+                monthlyRevenue: 0,
+                pendingAlerts: 0,
+                teamAdherence: 100,
+                teamAdherenceDetails: {
+                    totalScore: 100,
+                    reviewRate: 100,
+                    onboardingRate: 100,
+                    activeRate: 100
+                }
+            },
             coaches: [],
             clients: [],
             intelligenceFeed: [],
