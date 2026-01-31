@@ -135,10 +135,10 @@ export default async function AdminPage() {
     });
 
     return (
-        <main className="min-h-screen p-8 lg:p-12 pb-24 space-y-8 animate-in fade-in duration-700">
+        <main className="min-h-screen p-4 md:p-8 lg:p-12 pb-24 space-y-8 animate-in fade-in duration-700">
 
             {/* HEADER */}
-            <header className="flex justify-between items-end">
+            <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tighter">
                         Good Afternoon, <span className="accent-text">Omar</span>

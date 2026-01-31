@@ -138,7 +138,7 @@ export function ClientProfile({ clientId, client }: { clientId: string, client: 
 
             {/* Tabs Layout (Top Navigation) */}
             <div className="space-y-6">
-                <div className="flex items-center gap-2 overflow-x-auto pb-4 custom-scrollbar">
+                <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
@@ -171,7 +171,7 @@ export function ClientProfile({ clientId, client }: { clientId: string, client: 
                 </div>
 
                 <div className="w-full">
-                    <GlassCard className="min-h-[500px] p-8 transition-all duration-500" isActive={isPlanInteracting}>
+                    <GlassCard className="min-h-[500px] p-4 md:p-8 transition-all duration-500" isActive={isPlanInteracting}>
                         {useMemo(() => (
                             <>
                                 {activeTab === 'identity' && <IdentityTab clientId={clientId} client={client} />}

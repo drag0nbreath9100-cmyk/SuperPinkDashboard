@@ -13,7 +13,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
             {!isAuthPage && <Sidebar />}
             <div className={cn(
                 "flex-1 relative z-10 transition-all duration-300",
-                !isAuthPage && "pl-24" // Only apply padding if sidebar is present
+                !isAuthPage && "pl-0 md:pl-24" // Only apply padding on desktop when sidebar is present
             )}>
                 {children}
             </div>
