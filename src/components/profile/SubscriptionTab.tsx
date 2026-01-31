@@ -160,7 +160,7 @@ export function SubscriptionTab({ clientId, client }: { clientId: string, client
             </GlassCard>
 
             {/* Action Buttons */}
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 {(!formData.status || formData.status === 'inactive' || formData.status === 'pending' || (formData.status === 'active' && daysRemaining <= 0)) && (
                     <NeonButton
                         variant="primary"

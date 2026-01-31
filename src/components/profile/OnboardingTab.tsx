@@ -120,7 +120,7 @@ export function OnboardingTab({ clientId, client, onNavigateToWorkout }: Onboard
     };
 
     return (
-        <div className="h-[550px] flex flex-col gap-6">
+        <div className="min-h-[400px] md:h-[550px] flex flex-col gap-6">
             {/* Header */}
             <div className="flex items-center justify-between px-2">
                 <div>
@@ -140,7 +140,7 @@ export function OnboardingTab({ clientId, client, onNavigateToWorkout }: Onboard
             </div>
 
             {/* Accordion Container */}
-            <div className="flex-1 flex gap-5 min-h-0">
+            <div className="flex-1 flex flex-col md:flex-row gap-4 md:gap-5 min-h-0">
                 <AnimatePresence mode="popLayout">
                     {steps.map((step, index) => {
                         const isExpanded = expandedId === step.id;
@@ -154,7 +154,7 @@ export function OnboardingTab({ clientId, client, onNavigateToWorkout }: Onboard
                                 animate={{
                                     opacity: 1,
                                     x: 0,
-                                    flexGrow: isExpanded ? 3 : 0.8
+                                    flexGrow: isExpanded ? 3 : 1
                                 }}
                                 exit={{ opacity: 0, flexGrow: 0, scale: 0.9 }}
                                 whileHover={{ flexGrow: isExpanded ? 3 : 1 }}

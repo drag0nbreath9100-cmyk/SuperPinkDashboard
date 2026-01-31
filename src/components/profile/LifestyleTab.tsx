@@ -144,7 +144,7 @@ export function LifestyleTab({ clientId, client }: { clientId: string, client?: 
                 </GlassCard>
 
                 {/* Psychology Section */}
-                <GlassCard className="md:col-span-3 p-6">
+                <GlassCard className="md:col-span-2 p-6">
                     <h3 className="text-lg font-semibold text-white mb-4">Psychological Profile</h3>
                     <div className="space-y-4">
                         <div className="p-4 rounded-lg bg-white/5 border border-white/10">
