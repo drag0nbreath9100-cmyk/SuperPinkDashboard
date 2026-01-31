@@ -98,7 +98,8 @@ export default function HeadCoachCoachesPage() {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <NeonButton variant="ghost" icon={Filter} className="h-12 px-6">
+                    <NeonButton variant="ghost" className="h-12 px-6 flex items-center gap-2">
+                        <Filter className="w-4 h-4" />
                         Filter Status
                     </NeonButton>
                 </div>

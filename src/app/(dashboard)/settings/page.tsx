@@ -20,7 +20,7 @@ export default function SettingsPage() {
     const radii = [
         { value: "0", label: "Sharp" },
         { value: "0.5rem", label: "Modern" },
-        { value: "1.25rem", label: "Standard" },
+        { value: "1rem", label: "Standard" },
         { value: "2rem", label: "Round" },
     ] as const;
 

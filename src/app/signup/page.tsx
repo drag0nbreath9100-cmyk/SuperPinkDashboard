@@ -26,7 +26,7 @@ export default async function SignupPage({
     const supabase = await createClient();
     const { data: invitation, error: inviteError } = await supabase
         .rpc('get_invitation_by_token', { lookup_token: token })
-        .single();
+        .single<{ id: string; email: string; status: string; role: string }>();
 
     if (inviteError || !invitation || invitation.status !== 'pending') {
         return (

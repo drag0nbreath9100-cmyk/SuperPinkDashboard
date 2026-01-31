@@ -32,7 +32,8 @@ export function CoachLoadEditor({ coach, onUpdate }: CoachLoadEditorProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <NeonButton variant="ghost" size="sm" icon={Settings}>
+                <NeonButton variant="ghost" className="text-sm px-3 py-1.5 flex items-center gap-2">
+                    <Settings className="w-4 h-4" />
                     Edit Capacity
                 </NeonButton>
             </DialogTrigger>

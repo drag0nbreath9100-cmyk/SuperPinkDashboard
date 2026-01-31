@@ -210,7 +210,7 @@ export function HeadCoachStatsGrid() {
             <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {[...Array(4)].map((_, i) => (
-                        <GlassCard key={i} className="p-6 h-36 animate-pulse bg-white/5" />
+                        <GlassCard key={i} className="p-6 h-36 animate-pulse bg-white/5"><div /></GlassCard>
                     ))}
                 </div>
             </div>

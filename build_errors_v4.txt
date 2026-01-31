@@ -1,0 +1,127 @@
+﻿
+> web@0.1.0 build
+> next build
+
+node.exe : ΓÜá 
+Warning: Next.js 
+inferred your 
+workspace root, but 
+it may not be correct.
+At C:\Program Files\no
+dejs\npm.ps1:29 char:3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo    
+          : 
+NotSpecified: (ΓÜá    
+ Warning: Ne...not be 
+    correct.:String) 
+[], R    
+emoteException
+    + 
+FullyQualifiedErrorI  
+  d : 
+NativeCommandError
+ 
+ We detected multiple 
+lockfiles and 
+selected the 
+directory of C:\Users\
+Drvgon\Desktop\package
+-lock.json as the 
+root directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, 
+or consider removing 
+one of the lockfiles 
+if it's not needed.
+   See https://nextjs.
+org/docs/app/api-refer
+ence/config/next-confi
+g-js/turbopack#root-di
+rectory for more 
+information.
+ Detected additional 
+lockfiles: 
+   * C:\Users\Drvgon\D
+esktop\SuperPinkDashbo
+ard\package-lock.json
+
+Γû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please 
+use "proxy" instead. 
+Learn more: https://ne
+xtjs.org/docs/messages
+/middleware-to-proxy
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 13.8s
+  Running TypeScript ...
+Failed to compile.
+
+./src/app/(dashboard)/
+settings/page.tsx:110:
+66
+Type error: Argument 
+of type '"0" | "2rem" 
+| "0.5rem" | 
+"1.25rem"' is not 
+assignable to 
+parameter of type 
+'ThemeRadius'.
+  Type '"1.25rem"' is 
+not assignable to 
+type 'ThemeRadius'. 
+Did you mean 
+'"1.5rem"'?
+
+[0m [90m 108 |[39m 
+                      
+              [33m<[
+39m[33mbutton[39m
+ [90m 109 |[39m     
+                      
+              key[33m
+=[39m{r[33m.[39mval
+ue}
+[31m[1m>[22m[39m[
+90m 110 |[39m        
+                      
+           
+onClick[33m=[39m{() 
+[33m=>[39m setRadius
+(r[33m.[39mvalue)}
+ [90m     |[39m     
+                      
+                      
+                 
+[31m[1m^[22m[39m
+ [90m 111 |[39m     
+                      
+              classNam
+e[33m=[39m{cn(
+ [90m 112 |[39m     
+                      
+                  
+[32m"h-10 border 
+transition-all 
+duration-300 flex 
+items-center 
+justify-center 
+text-sm font-medium"[
+39m[33m,[39m
+ [90m 113 |[39m     
+                      
+                  
+radius [33m===[39m 
+r[33m.[39mvalue[0m
+Next.js build worker 
+exited with code: 1 
+and signal: null

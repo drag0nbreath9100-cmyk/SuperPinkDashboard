@@ -1,0 +1,165 @@
+﻿
+> web@0.1.0 build
+> next build
+
+node.exe : ΓÜá 
+Warning: Next.js 
+inferred your 
+workspace root, but 
+it may not be correct.
+At C:\Program Files\no
+dejs\npm.ps1:29 char:3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (ΓÜá Warnin   
+ g: Ne...not be co    
+rrect.:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+ We detected multiple 
+lockfiles and 
+selected the 
+directory of C:\Users\
+Drvgon\Desktop\package
+-lock.json as the 
+root directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, 
+or consider removing 
+one of the lockfiles 
+if it's not needed.
+   See https://nextjs.
+org/docs/app/api-refer
+ence/config/next-confi
+g-js/turbopack#root-di
+rectory for more 
+information.
+ Detected additional 
+lockfiles: 
+   * C:\Users\Drvgon\D
+esktop\SuperPinkDashbo
+ard\package-lock.json
+
+Γû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please 
+use "proxy" instead. 
+Learn more: https://ne
+xtjs.org/docs/messages
+/middleware-to-proxy
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 19.2s
+  Running TypeScript ...
+Failed to compile.
+
+./src/app/(dashboard)/
+admin/page.tsx:180:34
+Type error: Type '{ 
+activeClients: 
+number; 
+monthlyRevenue: 
+number; 
+pendingAlerts: 
+number; 
+revenueByPlan: { 
+name: any; value: 
+any; }[]; 
+revenueOverTime: { 
+name: string; value: 
+number; }[]; 
+revenueByYear: { 
+name: string; value: 
+number; }[]; 
+teamAdherence: 
+number; 
+teamAdherenceDetails: 
+{ ...; }; } | { ...; 
+}' is not assignable 
+to type '{ 
+revenueByPlan: { 
+name: string; value: 
+number; }[]; 
+revenueOverTime: { 
+name: string; value: 
+number; }[]; 
+revenueByYear: { 
+name: string; value: 
+number; }[]; 
+monthlyRevenue: 
+number; }'.
+  Type '{ 
+activeClients: 
+number; 
+monthlyRevenue: 
+number; 
+pendingAlerts: 
+number; 
+teamAdherence: 
+number; 
+teamAdherenceDetails: 
+{ totalScore: number; 
+reviewRate: number; 
+onboardingRate: 
+number; activeRate: 
+number; }; }' is 
+missing the following 
+properties from type 
+'{ revenueByPlan: { 
+name: string; value: 
+number; }[]; 
+revenueOverTime: { 
+name: string; value: 
+number; }[]; 
+revenueByYear: { 
+name: string; value: 
+number; }[]; 
+monthlyRevenue: 
+number; }': 
+revenueByPlan, 
+revenueOverTime, 
+revenueByYear
+
+[0m [90m 178 |[39m 
+                    
+{[90m/* Main Revenue 
+Chart */[39m}
+ [90m 179 |[39m     
+                
+{[90m/* Main Revenue 
+Chart */[39m}
+[31m[1m>[22m[39m[
+90m 180 |[39m        
+             [33m<[3
+9m[33mRevenueCard[39
+m stats[33m=[39m{sta
+ts} 
+[33m/[39m[33m>[39m
+ [90m     |[39m     
+                      
+       
+[31m[1m^[22m[39m
+ [90m 181 |[39m     
+            [33m<[39
+m[33m/[39m[33mdiv[
+39m[33m>[39m
+ [90m 182 |[39m
+ [90m 183 |[39m     
+            {[90m/* 
+RIGHT: Risks & Coach 
+Performance 
+*/[39m}[0m
+Next.js build worker 
+exited with code: 1 
+and signal: null

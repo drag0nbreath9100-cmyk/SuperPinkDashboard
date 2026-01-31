@@ -101,6 +101,9 @@ async function getData() {
                 activeClients: 0,
                 monthlyRevenue: 0,
                 pendingAlerts: 0,
+                revenueByPlan: [],
+                revenueOverTime: [],
+                revenueByYear: [],
                 teamAdherence: 100,
                 teamAdherenceDetails: {
                     totalScore: 100,

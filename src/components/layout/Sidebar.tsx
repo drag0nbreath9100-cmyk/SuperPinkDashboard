@@ -52,7 +52,7 @@ export function Sidebar() {
 
     // Calculate position for portal
     const getPortalPosition = () => {
-        if (!profileRef.current) return { top: 0, left: 0 };
+        if (!profileRef.current) return { left: 0, bottom: 0 };
         const rect = profileRef.current.getBoundingClientRect();
         return {
             left: rect.right + 16, // 16px gap

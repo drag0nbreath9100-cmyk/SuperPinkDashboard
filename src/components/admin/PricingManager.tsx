@@ -106,9 +106,9 @@ export function PricingManager() {
         const updates = {
             price: Number(editForm.price),
             discount_percent: discount,
-            offer_name: editForm.offer_name || null,
-            offer_start_date: editForm.offer_start_date ? new Date(editForm.offer_start_date).toISOString() : null,
-            offer_end_date: editForm.offer_end_date ? new Date(editForm.offer_end_date).toISOString() : null,
+            offer_name: editForm.offer_name || undefined,
+            offer_start_date: editForm.offer_start_date ? new Date(editForm.offer_start_date).toISOString() : undefined,
+            offer_end_date: editForm.offer_end_date ? new Date(editForm.offer_end_date).toISOString() : undefined,
         };
 
         const success = await api.updatePricingPlan(id, updates);

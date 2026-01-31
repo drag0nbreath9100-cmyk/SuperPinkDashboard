@@ -215,12 +215,12 @@ export function AnimatedStatsGrid({ coachId }: { coachId?: string }) {
             <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[...Array(2)].map((_, i) => (
-                        <GlassCard key={`hero-${i}`} className="p-6 h-40 animate-pulse bg-white/5" />
+                        <GlassCard key={`hero-${i}`} className="p-6 h-40 animate-pulse bg-white/5"><div /></GlassCard>
                     ))}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[...Array(3)].map((_, i) => (
-                        <GlassCard key={`sub-${i}`} className="p-6 h-32 animate-pulse bg-white/5" />
+                        <GlassCard key={`sub-${i}`} className="p-6 h-32 animate-pulse bg-white/5"><div /></GlassCard>
                     ))}
                 </div>
             </div>

@@ -1,0 +1,110 @@
+﻿
+> web@0.1.0 build
+> next build
+
+node.exe : ΓÜá 
+Warning: Next.js 
+inferred your 
+workspace root, but 
+it may not be correct.
+At C:\Program Files\no
+dejs\npm.ps1:29 char:3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (ΓÜá Warnin   
+ g: Ne...not be co    
+rrect.:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+ We detected multiple 
+lockfiles and 
+selected the 
+directory of C:\Users\
+Drvgon\Desktop\package
+-lock.json as the 
+root directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, 
+or consider removing 
+one of the lockfiles 
+if it's not needed.
+   See https://nextjs.
+org/docs/app/api-refer
+ence/config/next-confi
+g-js/turbopack#root-di
+rectory for more 
+information.
+ Detected additional 
+lockfiles: 
+   * C:\Users\Drvgon\D
+esktop\SuperPinkDashbo
+ard\package-lock.json
+
+Γû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please 
+use "proxy" instead. 
+Learn more: https://ne
+xtjs.org/docs/messages
+/middleware-to-proxy
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 14.1s
+  Running TypeScript ...
+Failed to compile.
+
+./src/app/signup/page.
+tsx:31:50
+Type error: Property 
+'status' does not 
+exist on type '{}'.
+
+[0m [90m 29 |[39m  
+       [33m.[39msing
+le()[33m;[39m
+ [90m 30 |[39m
+[31m[1m>[22m[39m[
+90m 31 |[39m     
+[36mif[39m 
+(inviteError 
+[33m||[39m 
+[33m![39minvitation 
+[33m||[39m invitatio
+n[33m.[39mstatus 
+[33m!==[39m 
+[32m'pending'[39m) {
+ [90m    |[39m      
+                      
+                      
+[31m[1m^[22m[39m
+ [90m 32 |[39m      
+   [36mreturn[39m (
+ [90m 33 |[39m      
+       [33m<[39m[33
+mdiv[39m className[3
+3m=[39m[32m"min-h-sc
+reen flex 
+items-center 
+justify-center 
+bg-[#020617] text-whit
+e"[39m[33m>[39m
+ [90m 34 |[39m      
+           [33m<[39m
+[33mdiv[39m classNam
+e[33m=[39m[32m"text
+-center p-8"[39m[33m
+>[39m[0m
+Next.js build worker 
+exited with code: 1 
+and signal: null

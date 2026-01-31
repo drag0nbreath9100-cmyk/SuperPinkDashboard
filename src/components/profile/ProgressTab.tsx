@@ -152,7 +152,7 @@ export function ProgressTab({ clientId, client }: { clientId: string, client?: C
                                     }}
                                     itemStyle={{ color: currentMetric.color }}
                                     labelStyle={{ color: '#94a3b8', marginBottom: '0.5rem' }}
-                                    formatter={(value: number) => [`${value} ${currentMetric.unit}`, currentMetric.label]}
+                                    formatter={((value: number) => [`${value} ${currentMetric.unit}`, currentMetric.label]) as never}
                                     labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                                 />
                                 <Area

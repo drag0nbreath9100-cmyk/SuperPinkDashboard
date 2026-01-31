@@ -56,7 +56,7 @@ export async function signup(formData: FormData) {
     // 2. Validate Token using RPC function (secure check)
     const { data: invitation, error: inviteError } = await supabase
         .rpc('get_invitation_by_token', { lookup_token: token })
-        .single();
+        .single<{ id: string; email: string; status: string; role: string }>();
 
     if (inviteError || !invitation) {
         return redirect(`/signup?token=${token}&error=Invalid invitation`);

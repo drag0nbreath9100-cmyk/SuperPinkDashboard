@@ -434,9 +434,9 @@ export function WorkoutPlanTab({
         // 3. API Update to Delete
         try {
             await api.updateClient(Number(client.id), {
-                workout_plan: null,
-                workout_plan_link: null,
-                workout_plan_created_at: null
+                workout_plan: undefined,
+                workout_plan_link: undefined,
+                workout_plan_created_at: undefined
             });
 
             setIsDeleting(false);

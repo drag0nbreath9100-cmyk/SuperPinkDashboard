@@ -1,0 +1,156 @@
+﻿
+> web@0.1.0 build
+> next build
+
+node.exe : ΓÜá Warning: 
+Next.js inferred your 
+workspace root, but it 
+may not be correct.
+At C:\Program 
+Files\nodejs\npm.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : (ΓÜá Warning: Ne.   
+ ..not be correct.:S    
+tring) [], RemoteEx    
+ception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+ We detected multiple 
+lockfiles and selected 
+the directory of C:\User
+s\Drvgon\Desktop\package
+-lock.json as the root 
+directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, or 
+consider removing one 
+of the lockfiles if 
+it's not needed.
+   See https://nextjs.or
+g/docs/app/api-reference
+/config/next-config-js/t
+urbopack#root-directory 
+for more information.
+ Detected additional 
+lockfiles: 
+   * C:\Users\Drvgon\Des
+ktop\SuperPinkDashboard\
+package-lock.json
+
+Γû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please use 
+"proxy" instead. Learn 
+more: https://nextjs.org
+/docs/messages/middlewar
+e-to-proxy
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 15.5s
+  Running TypeScript ...
+Failed to compile.
+
+./src/app/(dashboard)/ad
+min/page.tsx:180:34
+Type error: Type '{ 
+activeClients: number; 
+monthlyRevenue: number; 
+pendingAlerts: number; 
+revenueByPlan: never[]; 
+weeklyRevenue: never[]; 
+recentActivity: 
+never[]; teamAdherence: 
+number; 
+teamAdherenceDetails: { 
+...; }; 
+revenueOverTime?: 
+undefined; 
+revenueByYear?: 
+undefined; } | { ...; } 
+| { ...; }' is not 
+assignable to type '{ 
+revenueByPlan: { name: 
+string; value: number; 
+}[]; revenueOverTime: { 
+name: string; value: 
+number; }[]; 
+revenueByYear: { name: 
+string; value: number; 
+}[]; monthlyRevenue: 
+number; }'.
+  Type '{ 
+activeClients: number; 
+monthlyRevenue: number; 
+pendingAlerts: number; 
+revenueByPlan: never[]; 
+weeklyRevenue: never[]; 
+recentActivity: 
+never[]; teamAdherence: 
+number; 
+teamAdherenceDetails: { 
+totalScore: number; 
+reviewRate: number; 
+onboardingRate: number; 
+activeRate: number; }; 
+revenueOverTime?: 
+undefined; 
+revenueBy...' is not 
+assignable to type '{ 
+revenueByPlan: { name: 
+string; value: number; 
+}[]; revenueOverTime: { 
+name: string; value: 
+number; }[]; 
+revenueByYear: { name: 
+string; value: number; 
+}[]; monthlyRevenue: 
+number; }'.
+    Types of property 
+'revenueOverTime' are 
+incompatible.
+      Type 'undefined' 
+is not assignable to 
+type '{ name: string; 
+value: number; }[]'.
+
+[0m [90m 178 |[39m   
+                  
+{[90m/* Main Revenue 
+Chart */[39m}
+ [90m 179 |[39m       
+              {[90m/* 
+Main Revenue Chart 
+*/[39m}
+[31m[1m>[22m[39m[90
+m 180 |[39m            
+         [33m<[39m[33
+mRevenueCard[39m 
+stats[33m=[39m{stats} 
+[33m/[39m[33m>[39m
+ [90m     |[39m       
+                        
+   [31m[1m^[22m[39m
+ [90m 181 |[39m       
+          [33m<[39m[3
+3m/[39m[33mdiv[39m[3
+3m>[39m
+ [90m 182 |[39m
+ [90m 183 |[39m       
+          {[90m/* 
+RIGHT: Risks & Coach 
+Performance */[39m}[0m
+Next.js build worker 
+exited with code: 1 and 
+signal: null

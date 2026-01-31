@@ -256,7 +256,7 @@ export const api = {
             // Cache with short TTL (alerts change frequently)
             CacheManager.set(CACHE_KEYS.ALERTS, data, CACHE_TTL.SHORT);
 
-            return data as Alert[];
+            return data as unknown as Alert[];
         } catch (error) {
             console.error("Error fetching alerts:", error);
             return [];
@@ -461,8 +461,8 @@ export const api = {
                 monthlyRevenue: 0,
                 pendingAlerts: 0,
                 revenueByPlan: [],
-                weeklyRevenue: [],
-                recentActivity: [],
+                revenueOverTime: [],
+                revenueByYear: [],
                 teamAdherence: 0,
                 teamAdherenceDetails: { totalScore: 0, reviewRate: 0, onboardingRate: 0, activeRate: 0 }
             };

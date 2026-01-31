@@ -35,7 +35,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Initialize with default or saved values
     // We use a small hack to avoid hydration mismatch by waiting for mount
     const [color, setColor] = useState<ThemeColor>("blue");
-    const [radius, setRadius] = useState<ThemeRadius>("1.25rem"); // Default from globals.css
+    const [radius, setRadius] = useState<ThemeRadius>("1rem"); // Default from globals.css
     const [glassEnabled, setGlassEnabled] = useState(true);
     const [bgAnimated, setBgAnimated] = useState(false);
     const [bgStyle, setBgStyle] = useState<"dynamic" | "static">("dynamic");
@@ -60,7 +60,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const resetToDefaults = () => {
         setColor("blue");
-        setRadius("1.25rem");
+        setRadius("1rem");
         setGlassEnabled(true);
         setBgAnimated(false);
         setBgStyle("static");
