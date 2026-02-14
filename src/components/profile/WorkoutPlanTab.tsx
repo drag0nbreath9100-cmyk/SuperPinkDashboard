@@ -292,7 +292,8 @@ export function WorkoutPlanTab({
                     "Sec-Muscle": selectedExercise?.sub_muscle || "-",
                     "Warmup-Sets": selectedExercise?.warmup_sets || "",
                     "Video": selectedExercise?.video_link || "",
-                    "Hints": selectedExercise?.note || ""
+                    "Hints": selectedExercise?.note || "",
+                    "English_Hints": selectedExercise?.english_note || ""
                 });
             });
         });

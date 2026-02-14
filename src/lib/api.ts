@@ -51,6 +51,7 @@ export interface Exercise {
     default_weight?: string;
     warmup_sets?: string;
     note?: string;
+    english_note?: string;
 }
 
 export interface CheckIn {
