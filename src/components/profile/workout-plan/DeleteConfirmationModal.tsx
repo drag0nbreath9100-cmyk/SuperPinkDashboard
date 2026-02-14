@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertCircle, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -22,9 +23,16 @@ export function DeleteConfirmationModal({
     description = "This action cannot be undone immediately. You will have a short window to undo.",
     isDeleting = false
 }: DeleteConfirmationModalProps) {
-    if (!isOpen) return null;
+    const [mounted, setMounted] = useState(false);
 
-    return (
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
+    if (!mounted) return null;
+
+    return createPortal(
         <AnimatePresence>
             {isOpen && (
                 <>
@@ -34,7 +42,7 @@ export function DeleteConfirmationModal({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+                        className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm"
                     />
 
                     {/* Modal */}
@@ -42,7 +50,7 @@ export function DeleteConfirmationModal({
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-full max-w-md p-1"
+                        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-full max-w-md p-1"
                     >
                         <div className="relative overflow-hidden rounded-2xl bg-[#0A0A0B] border border-white/10 shadow-2xl shadow-red-900/20">
                             {/* Glass overlay */}
@@ -92,6 +100,7 @@ export function DeleteConfirmationModal({
                     </motion.div>
                 </>
             )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
     );
 }

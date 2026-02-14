@@ -115,10 +115,10 @@ export interface Client {
     active_subscription?: boolean;
     recommended_plan?: string;
     subscribed_plan_id?: string;
-    workout_plan?: any;
-    workout_plan_link?: string;
+    workout_plan?: any | null;
+    workout_plan_link?: string | null;
     created_at?: string;
-    workout_plan_created_at?: string;
+    workout_plan_created_at?: string | null;
     active_status_at?: string;
     subscription_total_days?: number;
     // Onboarding fields
@@ -1209,6 +1209,38 @@ export const api = {
         } catch (error) {
             console.error("Error adding head coach feedback:", error);
             return null;
+        }
+    },
+
+    createWorkoutTemplate: async (template: { name: string; description: string; plan_data: any; coach_id?: string }) => {
+        if (!isSupabaseConfigured()) return null;
+        try {
+            const { data, error } = await supabase
+                .from('workout_templates')
+                .insert([template])
+                .select()
+                .single();
+
+            if (error) throw error;
+            return data;
+        } catch (error) {
+            console.error("Error creating workout template:", error);
+            return null;
+        }
+    },
+
+    getWorkoutTemplates: async () => {
+        if (!isSupabaseConfigured()) return [];
+        try {
+            const { data, error } = await supabase
+                .from('workout_templates')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            return data;
+        } catch (error) {
+            console.error("Error fetching templates:", error);
+            return [];
         }
     }
 };

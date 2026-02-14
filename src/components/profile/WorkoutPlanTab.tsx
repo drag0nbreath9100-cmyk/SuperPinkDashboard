@@ -1,11 +1,11 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ReactDOM from "react-dom";
 import { Dumbbell, Zap, ChevronDown, Sparkles, Loader2, Bug, ExternalLink, FileSpreadsheet, Maximize2, Pencil, Check, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { api, Client, Exercise } from "@/lib/api";
+import { api, Client, Exercise, CURRENT_COACH_ID } from "@/lib/api";
 import { Reorder, motion, AnimatePresence } from "framer-motion";
 
 import { PLANS } from "./workout-plan/constants";
@@ -435,9 +435,9 @@ export function WorkoutPlanTab({
         // 3. API Update to Delete
         try {
             await api.updateClient(Number(client.id), {
-                workout_plan: undefined,
-                workout_plan_link: undefined,
-                workout_plan_created_at: undefined
+                workout_plan: null,
+                workout_plan_link: null,
+                workout_plan_created_at: null
             });
 
             setIsDeleting(false);
@@ -641,6 +641,110 @@ export function WorkoutPlanTab({
         }
     };
 
+    const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+    const [templateName, setTemplateName] = useState("");
+    const [templateDesc, setTemplateDesc] = useState("");
+    const [isSavingTemplate, setIsSavingTemplate] = useState(false);
+
+    // Load Template State
+    const [isLoadTemplateModalOpen, setIsLoadTemplateModalOpen] = useState(false);
+    const [templates, setTemplates] = useState<any[]>([]);
+    const [isLoadingTemplates, setIsLoadingTemplates] = useState(false);
+
+    // Fetch templates when opening load modal
+    useEffect(() => {
+        if (isLoadTemplateModalOpen) {
+            const fetchTemplates = async () => {
+                setIsLoadingTemplates(true);
+                const data = await api.getWorkoutTemplates();
+                setTemplates(data || []);
+                setIsLoadingTemplates(false);
+            };
+            fetchTemplates();
+        }
+    }, [isLoadTemplateModalOpen]);
+
+    const handleSaveTemplate = async () => {
+        if (!templateName.trim()) {
+            toast.error("Please enter a template name");
+            return;
+        }
+
+        setIsSavingTemplate(true);
+        // Collapse all sessions for better UI during save/load
+        setExpandedSessions({});
+
+        try {
+            // Construct the plan data similar to how we save to sheet but cleaner
+            const workoutPlan: any[] = [];
+            currentPlan?.sessions.forEach((session, sessionIdx) => {
+                const dayName = session.name.replace(/\s+/g, '_');
+                const currentOrder = sessionOrders[sessionIdx] || Array.from({ length: session.exerciseCount }).map((_, i) => i);
+
+                currentOrder.forEach((exIdx, orderIdx) => {
+                    const rowData = planData[sessionIdx]?.[exIdx] || {};
+                    const selectedExercise = exercises.find(e => e.id === rowData.exerciseId);
+
+                    if (selectedExercise) {
+                        workoutPlan.push({
+                            "PlanName": currentPlan.description.split(' - ')[0],
+                            "day": dayName,
+                            "order": orderIdx + 1,
+                            "Execrscices": selectedExercise.name,
+                            "sets": rowData.sets,
+                            "Reps": rowData.reps,
+                            "Rest": rowData.rest,
+                            "Muscle": selectedExercise.main_muscle,
+                            "Sec-Muscle": selectedExercise.sub_muscle,
+                            "Video": selectedExercise.video_link,
+                            "Hints": selectedExercise.note,
+                            "English_Hints": selectedExercise.english_note
+                        });
+                    }
+                });
+            });
+
+            const templatePayload = {
+                name: templateName,
+                description: templateDesc,
+                plan_data: { WorkoutPlan: workoutPlan },
+                coach_id: CURRENT_COACH_ID
+            };
+
+            const result = await api.createWorkoutTemplate(templatePayload);
+
+            if (result) {
+                toast.success("Template saved successfully");
+                setIsTemplateModalOpen(false);
+                setTemplateName("");
+                setTemplateDesc("");
+            } else {
+                toast.error("Failed to save template");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error saving template");
+        } finally {
+            setIsSavingTemplate(false);
+        }
+    };
+
+    const handleLoadTemplate = (template: any) => {
+        if (!template.plan_data?.WorkoutPlan) {
+            toast.error("Invalid template data");
+            return;
+        }
+
+        loadPlanFromData(template.plan_data.WorkoutPlan);
+        toast.success(`Loaded template: ${template.name}`);
+        setIsLoadTemplateModalOpen(false);
+
+        // Collapse sessions for a clean start
+        setExpandedSessions({});
+    };
+
+
+
     return (
         <div className="h-full space-y-8 animate-in fade-in duration-500 pb-20 relative min-h-screen">
             <EtherealOverlay isVisible={isGenerating} exercises={exercises} />
@@ -651,6 +755,119 @@ export function WorkoutPlanTab({
                 onConfirm={confirmDeletePlan}
                 isDeleting={isDeleting}
             />
+
+            {/* Template Save Modal - Simple Inline Implementation for speed */}
+            {isTemplateModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 text-white">
+                    <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
+                        <h3 className="text-xl font-bold">Save as Template</h3>
+
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-300">Template Name</label>
+                                <input
+                                    value={templateName}
+                                    onChange={(e) => setTemplateName(e.target.value)}
+                                    placeholder="e.g. Hypertrophy Phase 1"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-300">Description (Optional)</label>
+                                <textarea
+                                    value={templateDesc}
+                                    onChange={(e) => setTemplateDesc(e.target.value)}
+                                    placeholder="Brief description of the plan..."
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 h-24 resize-none"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end gap-3 pt-2">
+                            <button
+                                onClick={() => setIsTemplateModalOpen(false)}
+                                className="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSaveTemplate}
+                                disabled={isSavingTemplate}
+                                className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            >
+                                {isSavingTemplate ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                Save Template
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Load Template Modal */}
+            {isLoadTemplateModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 text-white">
+                    <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl w-full max-w-2xl p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[80vh] flex flex-col">
+                        <div className="flex justify-between items-center">
+                            <h3 className="text-xl font-bold flex items-center gap-2">
+                                <FileSpreadsheet className="w-5 h-5 text-blue-400" />
+                                Load Template
+                            </h3>
+                            <button
+                                onClick={() => setIsLoadTemplateModalOpen(false)}
+                                className="text-slate-400 hover:text-white transition-colors"
+                            >
+                                <ChevronDown className="w-5 h-5 rotate-180" />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                            {isLoadingTemplates ? (
+                                <div className="flex items-center justify-center py-10">
+                                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+                                </div>
+                            ) : templates.length === 0 ? (
+                                <div className="text-center py-10 text-slate-400">
+                                    No templates found. Save a plan as a template to see it here.
+                                </div>
+                            ) : (
+                                templates.map((template) => (
+                                    <div
+                                        key={template.id}
+                                        className="group bg-white/5 border border-white/10 hover:border-blue-500/50 hover:bg-white/10 rounded-xl p-4 transition-all cursor-pointer flex justify-between items-center"
+                                        onClick={() => handleLoadTemplate(template)}
+                                    >
+                                        <div>
+                                            <h4 className="font-semibold text-white group-hover:text-blue-300 transition-colors">
+                                                {template.name}
+                                            </h4>
+                                            {template.description && (
+                                                <p className="text-sm text-slate-400 mt-1 line-clamp-1">
+                                                    {template.description}
+                                                </p>
+                                            )}
+                                            <p className="text-xs text-slate-500 mt-2">
+                                                Created: {new Date(template.created_at).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                        <div className="text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                                            Load →
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+
+                        <div className="flex justify-end pt-2 border-t border-white/10">
+                            <button
+                                onClick={() => setIsLoadTemplateModalOpen(false)}
+                                className="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <AnimatePresence mode="wait">
                 <motion.div
@@ -677,31 +894,56 @@ export function WorkoutPlanTab({
                         </div>
 
                         {/* Exercise Type Toggle */}
-                        <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 self-start md:self-auto">
+                        <div className="flex items-center gap-4">
+                            {/* Save Template Button - Only Show if Plan Exists or Generating */}
+                            {(Object.keys(planData).length > 0 || hasPlan) && (
+                                <button
+                                    onClick={() => {
+                                        setExpandedSessions({});
+                                        setIsTemplateModalOpen(true);
+                                    }}
+                                    className="px-4 py-2 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 font-medium"
+                                >
+                                    <Save className="w-4 h-4" />
+                                    Save as Template
+                                </button>
+                            )}
+
+                            {/* Load Template Button */}
                             <button
-                                onClick={() => setExerciseType('gym')}
-                                className={cn(
-                                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2",
-                                    exerciseType === 'gym'
-                                        ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
-                                        : "text-slate-400 hover:text-white hover:bg-white/5"
-                                )}
+                                onClick={() => setIsLoadTemplateModalOpen(true)}
+                                className="px-4 py-2 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 font-medium"
                             >
-                                <Dumbbell className="w-4 h-4" />
-                                Gym
+                                <FileSpreadsheet className="w-4 h-4" />
+                                Load Template
                             </button>
-                            <button
-                                onClick={() => setExerciseType('home')}
-                                className={cn(
-                                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2",
-                                    exerciseType === 'home'
-                                        ? "bg-purple-600 text-white shadow-lg shadow-purple-900/20"
-                                        : "text-slate-400 hover:text-white hover:bg-white/5"
-                                )}
-                            >
-                                <Maximize2 className="w-4 h-4" />
-                                Home
-                            </button>
+
+                            <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 self-start md:self-auto">
+                                <button
+                                    onClick={() => setExerciseType('gym')}
+                                    className={cn(
+                                        "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2",
+                                        exerciseType === 'gym'
+                                            ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
+                                            : "text-slate-400 hover:text-white hover:bg-white/5"
+                                    )}
+                                >
+                                    <Dumbbell className="w-4 h-4" />
+                                    Gym
+                                </button>
+                                <button
+                                    onClick={() => setExerciseType('home')}
+                                    className={cn(
+                                        "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2",
+                                        exerciseType === 'home'
+                                            ? "bg-purple-600 text-white shadow-lg shadow-purple-900/20"
+                                            : "text-slate-400 hover:text-white hover:bg-white/5"
+                                    )}
+                                >
+                                    <Maximize2 className="w-4 h-4" />
+                                    Home
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -838,7 +1080,10 @@ export function WorkoutPlanTab({
                                 )}
                                 {hasPlan && (
                                     <button
-                                        onClick={() => setIsDeleteModalOpen(true)}
+                                        onClick={() => {
+                                            setExpandedSessions({});
+                                            setIsDeleteModalOpen(true);
+                                        }}
                                         className="p-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl transition-colors border border-red-500/20"
                                         title="Delete Plan"
                                     >
