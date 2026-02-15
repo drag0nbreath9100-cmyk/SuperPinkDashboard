@@ -904,13 +904,9 @@ export const api = {
             return data as Client;
         } catch (error) {
             const err = error as { message?: string; code?: string };
-            if (err.message?.includes('PGRST116') || err.code === 'PGRST116') {
-                // Expected behavior for demo/RLS restrictions
-            } else {
-                console.error("Error updating client:", err.message || err);
-            }
-            // Fallback for demo if supabase fails (e.g. RLS)
-            return { ...updates, id } as Client;
+            console.error("Error updating client:", err.message || err);
+            // Return null on error so the UI handles it correctly instead of pretending it worked
+            return null;
         }
     },
 

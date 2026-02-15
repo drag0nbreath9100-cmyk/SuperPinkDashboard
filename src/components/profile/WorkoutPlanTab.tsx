@@ -36,6 +36,7 @@ export function WorkoutPlanTab({
     const [exerciseType, setExerciseType] = useState<'gym' | 'home'>('gym'); // New state for exercise type
     const [planData, setPlanData] = useState<Record<number, Record<number, any>>>({});
     const [expandedSessions, setExpandedSessions] = useState<Record<number, boolean>>({ 0: true });
+    const [originalSessionCounts, setOriginalSessionCounts] = useState<Record<number, number>>({});
 
     // Logging state
     const [debugLog, setDebugLog] = useState<string[]>([]);
@@ -132,6 +133,14 @@ export function WorkoutPlanTab({
             });
 
             setPlanData(newPlanData);
+
+            // Calculate original counts per session
+            const counts: Record<number, number> = {};
+            Object.keys(newPlanData).forEach(sIdx => {
+                counts[Number(sIdx)] = Object.keys(newPlanData[Number(sIdx)]).length;
+            });
+            setOriginalSessionCounts(counts);
+
 
             // Set expanded appropriately
             const initialExpanded: Record<number, boolean> = {};
@@ -376,7 +385,8 @@ export function WorkoutPlanTab({
             const currentOrder = sessionOrders[sessionIdx] || [];
             return {
                 "Day": session.name,
-                "Exercises": currentOrder.length
+                "Exercises": originalSessionCounts[sessionIdx] || 0,
+                "ExercisesNow": currentOrder.length
             };
         });
 
@@ -384,7 +394,7 @@ export function WorkoutPlanTab({
             "ClientInfo": client,
             "WorkoutPlan": workoutPlan,
             "DaySummary": daySummary,
-            "order": 6 // Requested fixed order field for the payload
+            "order": 6, // Requested fixed order field for the payload
         };
 
         if (isUpdate && currentSheetLink) {
@@ -396,90 +406,105 @@ export function WorkoutPlanTab({
 
         setExpandedSessions({}); // Collapse all days immediately
         setIsSaving(true);
-        setSaveStatus("Connecting...");
-        setSheetLink(null); // Reset previous link
+        setSaveStatus("Saving to database...");
 
         try {
             console.log("Saving Plan Payload:", finalPayload);
 
-            // Timeout to change message if it takes a while
-            const messageTimer = setTimeout(() => setSaveStatus("Generating Spreadsheet..."), 3000);
+            // 1. ALWAYS save to DB first
+            const now = new Date();
+            const durationDays = client.subscription_total_days || 30;
+            const endDate = new Date(now);
+            endDate.setDate(now.getDate() + durationDays);
 
-            // Determine webhook URL based on update status
-            const webhookUrl = isUpdate
-                ? "https://itsDrvgon-n8n-free.hf.space/webhook-test/workout-plan-editor"
-                : "https://itsDrvgon-n8n-free.hf.space/webhook/workout-plan-generator";
+            const shouldActivate = client.status === 'new_lead' || client.status === 'pending' || !client.status;
 
-            const response = await fetch(webhookUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(finalPayload)
+            const updatedClient = await api.updateClient(Number(client.id), {
+                workout_plan: finalPayload,
+                workout_plan_link: currentSheetLink,
+                workout_plan_created_at: client.workout_plan_created_at || now.toISOString(),
+                subscription_start_date: now.toISOString().split('T')[0],
+                subscription_end_date: endDate.toISOString().split('T')[0],
+                ...(shouldActivate && {
+                    status: 'active' as const,
+                    active_status_at: now.toISOString()
+                })
             });
 
-            clearTimeout(messageTimer);
+            if (!updatedClient) {
+                alert("Failed to save plan to database.");
+                setIsSaving(false);
+                return;
+            }
 
-            if (response.ok) {
-                setSaveStatus("Finalizing...");
-                let data = await response.json();
-                console.log("Webhook Response:", data);
+            console.log("DB save successful");
 
-                // Handle Array response (n8n often returns arrays)
-                if (Array.isArray(data)) {
-                    data = data.length > 0 ? data[0] : {};
-                }
+            // 2. Update original session counts to reflect the new saved state
+            const newOriginalCounts: Record<number, number> = {};
+            currentPlan.sessions.forEach((_, sIdx) => {
+                const order = sessionOrders[sIdx] || Array.from({ length: currentPlan.sessions[sIdx].exerciseCount });
+                newOriginalCounts[sIdx] = order.length;
+            });
+            setOriginalSessionCounts(newOriginalCounts);
+            setHasPlan(true);
 
-                // Try multiple common variations
-                const link = data.SheetLink || data.sheetLink || data.link || data.url || data.Sheet_Link || data.sheet_link || data.Sheet_URL || data.sheet_url;
+            // 3. Determine webhook URL
+            const webhookUrl = isUpdate
+                ? "https://itsDrvgon-n8n-free.hf.space/webhook/workout-plan-editor"
+                : "https://itsDrvgon-n8n-free.hf.space/webhook/workout-plan-generator";
 
-                if (link) {
-                    setSheetLink(link);
-                    setIframeLoading(true);
+            if (isUpdate) {
+                // Fire-and-forget for updates — no response needed
+                fetch(webhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(finalPayload)
+                }).catch(err => console.error("Webhook fire-and-forget error:", err));
 
-                    // Save to Database
-                    try {
-                        const now = new Date();
-                        const durationDays = client.subscription_total_days || 30;
-                        const endDate = new Date(now);
-                        endDate.setDate(now.getDate() + durationDays);
+                setSaveStatus("Done!");
+                setTimeout(() => setIsSaving(false), 1000);
+            } else {
+                // For new plans, wait for webhook to get the SheetLink back
+                setSaveStatus("Generating Spreadsheet...");
 
-                        // Determine if we should activate the client (new_lead -> active)
-                        const shouldActivate = client.status === 'new_lead' || client.status === 'pending' || !client.status;
+                const response = await fetch(webhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(finalPayload)
+                });
 
-                        await api.updateClient(Number(client.id), {
-                            workout_plan: finalPayload,
-                            workout_plan_link: link,
-                            workout_plan_created_at: client.workout_plan_created_at || now.toISOString(),
-                            // Set subscription dates from workout plan completion
-                            subscription_start_date: now.toISOString().split('T')[0],
-                            subscription_end_date: endDate.toISOString().split('T')[0],
-                            // Auto-transition to active if new_lead/pending
-                            ...(shouldActivate && {
-                                status: 'active' as const,
-                                active_status_at: now.toISOString()
-                            })
-                        });
-                        setHasPlan(true); // Update state to show Edit button / hide Save button
-                    } catch (dbError) {
-                        console.error("Failed to save to DB:", dbError);
-                        // We don't block the user if DB save fails but Sheet succeeded, effectively treating Sheet as valid save
+                if (response.ok) {
+                    setSaveStatus("Finalizing...");
+                    let data = await response.json();
+                    console.log("Webhook Response:", data);
+
+                    if (Array.isArray(data)) {
+                        data = data.length > 0 ? data[0] : {};
                     }
 
-                    // We do NOT set isSaving(false) here, we wait for iframe onLoad
+                    const link = data.SheetLink || data.sheetLink || data.link || data.url || data.Sheet_Link || data.sheet_link || data.Sheet_URL || data.sheet_url;
 
-                    // Safety fallback: ensure overlay closes even if iframe onLoad hangs
-                    setTimeout(() => {
+                    if (link) {
+                        setSheetLink(link);
+                        setIframeLoading(true);
+
+                        // Update DB with the new sheet link
+                        await api.updateClient(Number(client.id), {
+                            workout_plan_link: link
+                        });
+
+                        setTimeout(() => {
+                            setIsSaving(false);
+                            setIframeLoading(false);
+                        }, 8000);
+                    } else {
+                        console.warn("No SheetLink in response:", data);
                         setIsSaving(false);
-                        setIframeLoading(false);
-                    }, 8000);
+                    }
                 } else {
-                    console.error("Missing SheetLink in response:", data);
-                    const keys = typeof data === 'object' ? Object.keys(data).join(", ") : "Not an object";
-                    alert(`Plan saved, but could not find 'SheetLink' in response.\nKeys received: ${keys}`);
+                    console.error("Webhook error:", response.status);
                     setIsSaving(false);
                 }
-            } else {
-                alert("Failed to save plan: Server responded with error.");
-                setIsSaving(false);
             }
         } catch (error) {
             console.error("Error saving plan:", error);
