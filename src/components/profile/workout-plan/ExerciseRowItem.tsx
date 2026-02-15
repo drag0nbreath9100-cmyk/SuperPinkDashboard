@@ -209,8 +209,9 @@ export const ExerciseRowItem = memo(({
 
             <div className="text-right pr-2">
                 <button
-                    className="p-1.5 text-slate-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                    className="p-1.5 text-slate-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                     onClick={() => onDelete(sessionIdx, exIdx)}
+                    title="Remove Exercise"
                 >
                     <Trash2 className="w-4 h-4" />
                 </button>

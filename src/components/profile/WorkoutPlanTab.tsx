@@ -255,14 +255,41 @@ export function WorkoutPlanTab({
     }, [exercises]);
 
     const handleDeleteExercise = useCallback((sessionIdx: number, exIdx: number) => {
-        setPlanData(prev => ({
-            ...prev,
-            [sessionIdx]: {
-                ...(prev[sessionIdx] || {}),
-                [exIdx]: { exerciseId: "", sets: "", reps: "", weight: "", rest: "", mainMuscle: "", subMuscle: "" }
+        setSessionOrders(prev => {
+            const currentOrder = prev[sessionIdx] || [];
+            return {
+                ...prev,
+                [sessionIdx]: currentOrder.filter(idx => idx !== exIdx)
+            };
+        });
+
+        // Optional: Clean up data, though not strictly necessary if we just hide it via order
+        setPlanData(prev => {
+            const newData = { ...prev };
+            if (newData[sessionIdx]) {
+                delete newData[sessionIdx][exIdx];
             }
-        }));
+            return newData;
+        });
     }, []);
+
+    const handleAddRow = useCallback((sessionIdx: number) => {
+        setSessionOrders(prev => {
+            const currentOrder = prev[sessionIdx] || [];
+            // Find max index to ensure uniqueness
+            const maxIdx = currentOrder.length > 0 ? Math.max(...currentOrder) : -1;
+            // Also check planData keys for that session to be safe, though orders should track it
+            const existingKeys = Object.keys(planData[sessionIdx] || {}).map(Number);
+            const maxDataIdx = existingKeys.length > 0 ? Math.max(...existingKeys) : -1;
+
+            const newIdx = Math.max(maxIdx, maxDataIdx) + 1;
+
+            return {
+                ...prev,
+                [sessionIdx]: [...currentOrder, newIdx]
+            };
+        });
+    }, [planData]);
 
     const currentPlan = PLANS.find(p => p.id === selectedPlan);
 
@@ -283,7 +310,7 @@ export function WorkoutPlanTab({
                 workoutPlan.push({
                     "PlanName": planName,
                     "day": dayName,
-                    "order": orderIdx + 1,
+                    "order": orderIdx + 1, // Visual order (1-based)
                     "Execrscices": selectedExercise?.name || "",
                     "sets": rowData.sets || "",
                     "Reps": rowData.reps || "",
@@ -314,7 +341,8 @@ export function WorkoutPlanTab({
 
         const finalPayload: any = {
             "ClientInfo": client,
-            "WorkoutPlan": workoutPlan
+            "WorkoutPlan": workoutPlan,
+            "order": 6 // Requested fixed order field for the payload
         };
 
         if (isUpdate && currentSheetLink) {
@@ -1224,6 +1252,19 @@ export function WorkoutPlanTab({
                                                                     );
                                                                 })}
                                                             </Reorder.Group>
+
+                                                            {/* Add Exercise Button */}
+                                                            {(!hasPlan || isEditing) && (
+                                                                <button
+                                                                    onClick={() => handleAddRow(sessionIdx)}
+                                                                    className="w-full py-3 flex items-center justify-center gap-2 text-slate-500 hover:text-white hover:bg-white/5 transition-colors border-t border-white/5 text-sm font-medium group/add"
+                                                                >
+                                                                    <div className="w-5 h-5 rounded-full border border-slate-600 group-hover/add:border-blue-400 flex items-center justify-center transition-colors">
+                                                                        <span className="text-sm leading-none mb-0.5 group-hover/add:text-blue-400">+</span>
+                                                                    </div>
+                                                                    Add Exercise
+                                                                </button>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
