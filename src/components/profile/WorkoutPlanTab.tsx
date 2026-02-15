@@ -138,7 +138,17 @@ export function WorkoutPlanTab({
             targetPlan.sessions.forEach((_, idx) => initialExpanded[idx] = (idx === 0));
             setExpandedSessions(initialExpanded);
 
-            console.log("Loaded persisted plan:", finalPlanId, newPlanData);
+            // Sync sessionOrders with loaded data
+            const newOrders: Record<number, number[]> = {};
+            Object.keys(newPlanData).forEach(sessionKey => {
+                const sIdx = Number(sessionKey);
+                // Get all exercise indices for this session, sorted
+                const indices = Object.keys(newPlanData[sIdx]).map(Number).sort((a, b) => a - b);
+                newOrders[sIdx] = indices;
+            });
+            setSessionOrders(newOrders);
+
+            console.log("Loaded persisted plan:", finalPlanId, newPlanData, newOrders);
         }
     }, [exercises]);
 
@@ -256,7 +266,18 @@ export function WorkoutPlanTab({
 
     const handleDeleteExercise = useCallback((sessionIdx: number, exIdx: number) => {
         setSessionOrders(prev => {
-            const currentOrder = prev[sessionIdx] || [];
+            let currentOrder = prev[sessionIdx];
+
+            // If order doesn't exist yet, initialize from default plan structure
+            if (!currentOrder) {
+                const plan = PLANS.find(p => p.id === selectedPlan);
+                if (plan && plan.sessions[sessionIdx]) {
+                    currentOrder = Array.from({ length: plan.sessions[sessionIdx].exerciseCount }).map((_, i) => i);
+                } else {
+                    currentOrder = [];
+                }
+            }
+
             return {
                 ...prev,
                 [sessionIdx]: currentOrder.filter(idx => idx !== exIdx)
@@ -271,11 +292,22 @@ export function WorkoutPlanTab({
             }
             return newData;
         });
-    }, []);
+    }, [selectedPlan]);
 
     const handleAddRow = useCallback((sessionIdx: number) => {
         setSessionOrders(prev => {
-            const currentOrder = prev[sessionIdx] || [];
+            let currentOrder = prev[sessionIdx];
+
+            // If order doesn't exist yet, initialize from default plan structure
+            if (!currentOrder) {
+                const plan = PLANS.find(p => p.id === selectedPlan);
+                if (plan && plan.sessions[sessionIdx]) {
+                    currentOrder = Array.from({ length: plan.sessions[sessionIdx].exerciseCount }).map((_, i) => i);
+                } else {
+                    currentOrder = [];
+                }
+            }
+
             // Find max index to ensure uniqueness
             const maxIdx = currentOrder.length > 0 ? Math.max(...currentOrder) : -1;
             // Also check planData keys for that session to be safe, though orders should track it
@@ -289,7 +321,7 @@ export function WorkoutPlanTab({
                 [sessionIdx]: [...currentOrder, newIdx]
             };
         });
-    }, [planData]);
+    }, [planData, selectedPlan]);
 
     const currentPlan = PLANS.find(p => p.id === selectedPlan);
 
@@ -339,9 +371,19 @@ export function WorkoutPlanTab({
 
         const currentSheetLink = sheetLink || client.workout_plan_link;
 
+        // Calculate Day Summary
+        const daySummary = currentPlan.sessions.map((session, sessionIdx) => {
+            const currentOrder = sessionOrders[sessionIdx] || [];
+            return {
+                "Day": session.name,
+                "Exercises": currentOrder.length
+            };
+        });
+
         const finalPayload: any = {
             "ClientInfo": client,
             "WorkoutPlan": workoutPlan,
+            "DaySummary": daySummary,
             "order": 6 // Requested fixed order field for the payload
         };
 
@@ -603,7 +645,22 @@ export function WorkoutPlanTab({
                             merged[sIdx][eIdx] = newPlanData[sIdx][eIdx];
                         });
                     });
+
                     return merged;
+                });
+
+                // Update sessionOrders for the new items
+                setSessionOrders(prevOrders => {
+                    const newOrders = { ...prevOrders };
+                    Object.keys(newPlanData).forEach(sKey => {
+                        const sIdx = Number(sKey);
+                        const newIndices = Object.keys(newPlanData[sIdx]).map(Number);
+                        const currentIndices = newOrders[sIdx] || [];
+                        // add only unique new indices
+                        const combined = Array.from(new Set([...currentIndices, ...newIndices])).sort((a, b) => a - b);
+                        newOrders[sIdx] = combined;
+                    });
+                    return newOrders;
                 });
 
                 setExpandedSessions(prev => {
