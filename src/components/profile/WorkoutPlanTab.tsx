@@ -960,7 +960,7 @@ export function WorkoutPlanTab({
                 document.body
             )}
 
-            {/* Load Template Modal - Ultra-Premium Design */}
+            {/* Load Template Modal - SuperPink Gaming Aesthetic */}
             {ReactDOM.createPortal(
                 <AnimatePresence>
                     {isLoadTemplateModalOpen && (
@@ -971,86 +971,80 @@ export function WorkoutPlanTab({
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 onClick={() => setIsLoadTemplateModalOpen(false)}
-                                className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md"
+                                className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl"
                             />
                             {/* Modal */}
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9, y: 20, filter: "blur(10px)" }}
-                                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-                                exit={{ opacity: 0, scale: 0.9, y: 20, filter: "blur(10px)" }}
-                                transition={{ type: "spring", damping: 30, stiffness: 350 }}
+                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                transition={{ type: "spring", damping: 25, stiffness: 300 }}
                                 className="fixed inset-0 z-[101] flex items-center justify-center p-4 pointer-events-none"
                             >
-                                <div className="pointer-events-auto w-full max-w-2xl">
-                                    <div className="relative overflow-hidden rounded-3xl bg-[#09090b]/90 backdrop-blur-2xl border border-white/10 shadow-[0_0_60px_-15px_rgba(0,0,0,0.6)] ring-1 ring-white/5 max-h-[85vh] flex flex-col">
-                                        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.05] to-transparent pointer-events-none" />
+                                <div className="pointer-events-auto w-full max-w-4xl h-[85vh] flex flex-col">
+                                    <div className="relative flex flex-col h-full overflow-hidden rounded-[2rem] bg-[#050505] border border-white/10 shadow-2xl ring-1 ring-white/5">
+                                        {/* Background Elements */}
+                                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-soft-light filter contrast-150 brightness-150" />
+                                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none translate-x-1/3 -translate-y-1/3" />
+                                        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-pink-600/10 blur-[100px] rounded-full pointer-events-none -translate-x-1/3 translate-y-1/3" />
 
-                                        <div className="relative p-7 flex flex-col h-full bg-grid-white/[0.02]">
-                                            {/* Header */}
-                                            <div className="flex items-start justify-between mb-6 shrink-0">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-white/10 shadow-inner">
-                                                        <FileSpreadsheet className="w-6 h-6 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" />
+                                        {/* Header */}
+                                        <div className="relative shrink-0 p-8 pb-4 flex items-center justify-between border-b border-white/5 backdrop-blur-sm z-10">
+                                            <div className="space-y-1">
+                                                <h3 className="text-3xl font-bold text-white tracking-tighter flex items-center gap-3">
+                                                    <FileSpreadsheet className="w-8 h-8 text-pink-500" />
+                                                    Template Library
+                                                </h3>
+                                                <p className="text-sm text-slate-400 font-medium pl-1">Select a blueprint to load into the planner</p>
+                                            </div>
+                                            <button
+                                                onClick={() => setIsLoadTemplateModalOpen(false)}
+                                                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all hover:rotate-90"
+                                            >
+                                                <X className="w-5 h-5" />
+                                            </button>
+                                        </div>
+
+                                        {/* Scroll/Content Area */}
+                                        <div className="relative flex-1 overflow-y-auto p-8 custom-scrollbar z-10">
+                                            {isLoadingTemplates ? (
+                                                <div className="h-full flex flex-col items-center justify-center space-y-4">
+                                                    <div className="w-12 h-12 border-4 border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
+                                                    <p className="text-sm text-slate-500 font-medium animate-pulse">Fetching templates...</p>
+                                                </div>
+                                            ) : templates.length === 0 ? (
+                                                <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
+                                                    <div className="w-24 h-24 rounded-full bg-white/[0.03] flex items-center justify-center ring-1 ring-white/5">
+                                                        <FileSpreadsheet className="w-10 h-10 text-slate-700" />
                                                     </div>
-                                                    <div>
-                                                        <h3 className="text-xl font-bold text-white tracking-tight">Load Template</h3>
-                                                        <p className="text-xs text-slate-400 font-medium tracking-wide uppercase mt-0.5">Select a Plan</p>
+                                                    <div className="space-y-2">
+                                                        <p className="text-xl font-semibold text-slate-300">No Templates Found</p>
+                                                        <p className="text-sm text-slate-500 max-w-xs mx-auto">Create a workout plan and save it as a template to build your library.</p>
                                                     </div>
                                                 </div>
-                                                <button
-                                                    onClick={() => setIsLoadTemplateModalOpen(false)}
-                                                    className="p-2 -mr-2 text-slate-500 hover:text-white transition-colors bg-transparent hover:bg-white/5 rounded-full"
-                                                >
-                                                    <X className="w-5 h-5" />
-                                                </button>
-                                            </div>
-
-                                            {/* Content */}
-                                            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar -mr-2 space-y-3">
-                                                {isLoadingTemplates ? (
-                                                    <div className="flex items-center justify-center py-20">
-                                                        <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-                                                    </div>
-                                                ) : templates.length === 0 ? (
-                                                    <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
-                                                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-2">
-                                                            <FileSpreadsheet className="w-8 h-8 text-slate-600" />
-                                                        </div>
-                                                        <p className="text-slate-400 font-medium">No templates found</p>
-                                                        <p className="text-xs text-slate-600 max-w-xs">Save your current plan as a template to see it here.</p>
-                                                    </div>
-                                                ) : (
-                                                    <div className="grid grid-cols-1 gap-3">
-                                                        {templates.map((template, i) => (
-                                                            <motion.div
-                                                                key={template.id}
-                                                                initial={{ opacity: 0, y: 15 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 25 }}
-                                                                className="group relative overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-b from-white/[0.08] to-transparent p-4 transition-all hover:border-blue-500/40 hover:from-white/[0.12] hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.15)] cursor-pointer"
-                                                                onClick={() => handleLoadTemplate(template)}
-                                                            >
-                                                                <div className="flex items-center justify-between relative z-10">
-                                                                    <div className="flex-1 min-w-0 pr-4">
-                                                                        <h4 className="font-bold text-white text-lg group-hover:text-blue-300 transition-colors truncate tracking-tight">
-                                                                            {template.name}
-                                                                        </h4>
-                                                                        {template.description && (
-                                                                            <p className="text-sm text-slate-400 mt-1 line-clamp-1 font-medium">
-                                                                                {template.description}
-                                                                            </p>
-                                                                        )}
-                                                                        <div className="flex items-center gap-2 mt-3">
-                                                                            <span className="text-[10px] uppercase tracking-wider font-bold text-blue-400/80 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/10">
-                                                                                Template
-                                                                            </span>
-                                                                            <span className="text-xs text-slate-600">
-                                                                                {new Date(template.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                                                                            </span>
+                                            ) : (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                    {templates.map((template, i) => (
+                                                        <motion.div
+                                                            key={template.id}
+                                                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                            transition={{ delay: i * 0.05, type: "spring", stiffness: 200, damping: 20 }}
+                                                            className="group relative h-48 flex flex-col justify-between p-6 rounded-[1.5rem] bg-[#0A0A0B] border border-white/5 hover:border-pink-500/40 transition-all duration-300 cursor-pointer overflow-hidden ring-1 ring-transparent hover:ring-pink-500/20 hover:shadow-[0_0_40px_-10px_rgba(236,72,153,0.3)] hover:-translate-y-1"
+                                                            onClick={() => handleLoadTemplate(template)}
+                                                        >
+                                                            {/* Hover Gradient Effect */}
+                                                            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/[0.02] to-purple-500/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                                            
+                                                            {/* Card Content */}
+                                                            <div className="relative z-10 flex flex-col h-full justify-between">
+                                                                <div className="space-y-3">
+                                                                    <div className="flex items-start justify-between">
+                                                                        <div className="w-10 h-10 rounded-xl bg-white/[0.03] flex items-center justify-center border border-white/5 group-hover:bg-pink-500/10 group-hover:border-pink-500/20 transition-colors">
+                                                                            <Dumbbell className="w-5 h-5 text-slate-500 group-hover:text-pink-400 transition-colors" />
                                                                         </div>
-                                                                    </div>
-
-                                                                    <div className="flex items-center gap-3 shrink-0">
+                                                                        
+                                                                        {/* Delete Action */}
                                                                         <button
                                                                             onClick={(e) => {
                                                                                 e.stopPropagation();
@@ -1064,23 +1058,40 @@ export function WorkoutPlanTab({
                                                                                     }
                                                                                 })();
                                                                             }}
-                                                                            className="p-2.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95"
+                                                                            className="p-2 -mr-2 -mt-2 text-slate-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
                                                                             title="Delete template"
                                                                         >
                                                                             <Trash2 className="w-4 h-4" />
                                                                         </button>
-
-                                                                        <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                                                                            <ExternalLink className="w-5 h-5" />
-                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    <div>
+                                                                        <h4 className="text-lg font-bold text-white leading-tight line-clamp-2 group-hover:text-pink-200 transition-colors">
+                                                                            {template.name}
+                                                                        </h4>
+                                                                        <p className="text-xs text-slate-500 mt-1.5 line-clamp-1 font-medium">
+                                                                            {template.description || "No description provided"}
+                                                                        </p>
                                                                     </div>
                                                                 </div>
-                                                            </motion.div>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
+
+                                                                <div className="flex items-center justify-between pt-4 border-t border-white/5 mt-auto">
+                                                                    <span className="text-[10px] uppercase tracking-wider font-bold text-slate-600 group-hover:text-pink-400/80 transition-colors">
+                                                                        {new Date(template.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                                                    </span>
+                                                                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600 group-hover:text-white transition-colors">
+                                                                        Load <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </motion.div>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
+
+                                        {/* Footer Gradient Fade */}
+                                        <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-[#050505] to-transparent pointer-events-none z-20" />
                                     </div>
                                 </div>
                             </motion.div>
