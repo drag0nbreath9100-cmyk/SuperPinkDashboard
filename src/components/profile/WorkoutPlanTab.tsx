@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ReactDOM from "react-dom";
-import { Dumbbell, Zap, ChevronDown, Sparkles, Loader2, Bug, ExternalLink, FileSpreadsheet, Maximize2, Pencil, Check, Save, Trash2 } from "lucide-react";
+import { Dumbbell, Zap, ChevronDown, Sparkles, Loader2, Bug, ExternalLink, FileSpreadsheet, Maximize2, Pencil, Check, Save, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { api, Client, Exercise, CURRENT_COACH_ID } from "@/lib/api";
@@ -31,6 +31,7 @@ export function WorkoutPlanTab({
     client: Client,
     onInteractionStateChange?: (isActive: boolean) => void
 }) {
+    const actionButtonsRef = useRef<HTMLDivElement>(null);
     const [selectedPlan, setSelectedPlan] = useState<string>("4D_BALANCED");
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [exerciseType, setExerciseType] = useState<'gym' | 'home'>('gym'); // New state for exercise type
@@ -180,6 +181,15 @@ export function WorkoutPlanTab({
         const isActive = !!openDropdown || !!hoveredRow;
         onInteractionStateChange?.(isActive);
     }, [openDropdown, hoveredRow, onInteractionStateChange]);
+
+    // Auto-scroll to action buttons when they become visible
+    useEffect(() => {
+        if (dataLoaded && hasPlan && actionButtonsRef.current) {
+            setTimeout(() => {
+                actionButtonsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+    }, [dataLoaded, hasPlan]);
 
     useEffect(() => {
         const fetchExercises = async () => {
@@ -781,8 +791,6 @@ export function WorkoutPlanTab({
         }
 
         setIsSavingTemplate(true);
-        // Collapse all sessions for better UI during save/load
-        setExpandedSessions({});
 
         try {
             // Construct the plan data similar to how we save to sheet but cleaner
@@ -866,117 +874,220 @@ export function WorkoutPlanTab({
                 isDeleting={isDeleting}
             />
 
-            {/* Template Save Modal - Simple Inline Implementation for speed */}
-            {isTemplateModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 text-white">
-                    <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
-                        <h3 className="text-xl font-bold">Save as Template</h3>
-
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-300">Template Name</label>
-                                <input
-                                    value={templateName}
-                                    onChange={(e) => setTemplateName(e.target.value)}
-                                    placeholder="e.g. Hypertrophy Phase 1"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-300">Description (Optional)</label>
-                                <textarea
-                                    value={templateDesc}
-                                    onChange={(e) => setTemplateDesc(e.target.value)}
-                                    placeholder="Brief description of the plan..."
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 h-24 resize-none"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex justify-end gap-3 pt-2">
-                            <button
+            {/* Template Save Modal - SuperPink Gaming Aesthetic */}
+            {ReactDOM.createPortal(
+                <AnimatePresence>
+                    {isTemplateModalOpen && (
+                        <>
+                            {/* Backdrop */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
                                 onClick={() => setIsTemplateModalOpen(false)}
-                                className="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                                className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md"
+                            />
+                            {/* Modal */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                                className="fixed inset-0 z-[101] flex items-center justify-center p-4 pointer-events-none"
                             >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleSaveTemplate}
-                                disabled={isSavingTemplate}
-                                className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                            >
-                                {isSavingTemplate ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                                Save Template
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                                <div className="pointer-events-auto w-full max-w-sm">
+                                    <div className="relative overflow-hidden rounded-3xl bg-[#09090b] shadow-2xl ring-1 ring-white/10">
+                                        {/* Top Gradient Bar */}
+                                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500" />
 
-            {/* Load Template Modal */}
-            {isLoadTemplateModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 text-white">
-                    <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl w-full max-w-2xl p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[80vh] flex flex-col">
-                        <div className="flex justify-between items-center">
-                            <h3 className="text-xl font-bold flex items-center gap-2">
-                                <FileSpreadsheet className="w-5 h-5 text-blue-400" />
-                                Load Template
-                            </h3>
-                            <button
-                                onClick={() => setIsLoadTemplateModalOpen(false)}
-                                className="text-slate-400 hover:text-white transition-colors"
-                            >
-                                <ChevronDown className="w-5 h-5 rotate-180" />
-                            </button>
-                        </div>
+                                        <div className="relative p-6 space-y-6">
+                                            {/* Header */}
+                                            <div className="text-center space-y-2">
+                                                <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center ring-1 ring-white/10 shadow-[0_0_15px_rgba(236,72,153,0.3)]">
+                                                    <Save className="w-5 h-5 text-pink-400" />
+                                                </div>
+                                                <h3 className="text-xl font-bold text-white tracking-tight">Save Template</h3>
+                                                <p className="text-xs text-slate-400 font-medium">Store your current plan for later use</p>
+                                            </div>
 
-                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-                            {isLoadingTemplates ? (
-                                <div className="flex items-center justify-center py-10">
-                                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                                </div>
-                            ) : templates.length === 0 ? (
-                                <div className="text-center py-10 text-slate-400">
-                                    No templates found. Save a plan as a template to see it here.
-                                </div>
-                            ) : (
-                                templates.map((template) => (
-                                    <div
-                                        key={template.id}
-                                        className="group bg-white/5 border border-white/10 hover:border-blue-500/50 hover:bg-white/10 rounded-xl p-4 transition-all cursor-pointer flex justify-between items-center"
-                                        onClick={() => handleLoadTemplate(template)}
-                                    >
-                                        <div>
-                                            <h4 className="font-semibold text-white group-hover:text-blue-300 transition-colors">
-                                                {template.name}
-                                            </h4>
-                                            {template.description && (
-                                                <p className="text-sm text-slate-400 mt-1 line-clamp-1">
-                                                    {template.description}
-                                                </p>
-                                            )}
-                                            <p className="text-xs text-slate-500 mt-2">
-                                                Created: {new Date(template.created_at).toLocaleDateString()}
-                                            </p>
-                                        </div>
-                                        <div className="text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-                                            Load →
+                                            {/* Inputs */}
+                                            <div className="space-y-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider pl-1">Name</label>
+                                                    <input
+                                                        value={templateName}
+                                                        onChange={(e) => setTemplateName(e.target.value)}
+                                                        placeholder="Plan Name..."
+                                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all font-medium text-sm"
+                                                        autoFocus
+                                                    />
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider pl-1">Description</label>
+                                                    <textarea
+                                                        value={templateDesc}
+                                                        onChange={(e) => setTemplateDesc(e.target.value)}
+                                                        placeholder="Optional notes..."
+                                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all h-20 resize-none text-sm leading-relaxed"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Actions */}
+                                            <div className="grid grid-cols-2 gap-3 pt-2">
+                                                <button
+                                                    onClick={() => setIsTemplateModalOpen(false)}
+                                                    className="px-4 py-3 rounded-xl font-semibold text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors text-sm"
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    onClick={handleSaveTemplate}
+                                                    disabled={isSavingTemplate}
+                                                    className="px-4 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 shadow-lg shadow-pink-900/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
+                                                >
+                                                    {isSavingTemplate ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                                    Save Plan
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                ))
-                            )}
-                        </div>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
 
-                        <div className="flex justify-end pt-2 border-t border-white/10">
-                            <button
+            {/* Load Template Modal - Ultra-Premium Design */}
+            {ReactDOM.createPortal(
+                <AnimatePresence>
+                    {isLoadTemplateModalOpen && (
+                        <>
+                            {/* Backdrop */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
                                 onClick={() => setIsLoadTemplateModalOpen(false)}
-                                className="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                                className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md"
+                            />
+                            {/* Modal */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9, y: 20, filter: "blur(10px)" }}
+                                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                                exit={{ opacity: 0, scale: 0.9, y: 20, filter: "blur(10px)" }}
+                                transition={{ type: "spring", damping: 30, stiffness: 350 }}
+                                className="fixed inset-0 z-[101] flex items-center justify-center p-4 pointer-events-none"
                             >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                <div className="pointer-events-auto w-full max-w-2xl">
+                                    <div className="relative overflow-hidden rounded-3xl bg-[#09090b]/90 backdrop-blur-2xl border border-white/10 shadow-[0_0_60px_-15px_rgba(0,0,0,0.6)] ring-1 ring-white/5 max-h-[85vh] flex flex-col">
+                                        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.05] to-transparent pointer-events-none" />
+
+                                        <div className="relative p-7 flex flex-col h-full bg-grid-white/[0.02]">
+                                            {/* Header */}
+                                            <div className="flex items-start justify-between mb-6 shrink-0">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-white/10 shadow-inner">
+                                                        <FileSpreadsheet className="w-6 h-6 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-xl font-bold text-white tracking-tight">Load Template</h3>
+                                                        <p className="text-xs text-slate-400 font-medium tracking-wide uppercase mt-0.5">Select a Plan</p>
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={() => setIsLoadTemplateModalOpen(false)}
+                                                    className="p-2 -mr-2 text-slate-500 hover:text-white transition-colors bg-transparent hover:bg-white/5 rounded-full"
+                                                >
+                                                    <X className="w-5 h-5" />
+                                                </button>
+                                            </div>
+
+                                            {/* Content */}
+                                            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar -mr-2 space-y-3">
+                                                {isLoadingTemplates ? (
+                                                    <div className="flex items-center justify-center py-20">
+                                                        <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+                                                    </div>
+                                                ) : templates.length === 0 ? (
+                                                    <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
+                                                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-2">
+                                                            <FileSpreadsheet className="w-8 h-8 text-slate-600" />
+                                                        </div>
+                                                        <p className="text-slate-400 font-medium">No templates found</p>
+                                                        <p className="text-xs text-slate-600 max-w-xs">Save your current plan as a template to see it here.</p>
+                                                    </div>
+                                                ) : (
+                                                    <div className="grid grid-cols-1 gap-3">
+                                                        {templates.map((template, i) => (
+                                                            <motion.div
+                                                                key={template.id}
+                                                                initial={{ opacity: 0, y: 15 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 25 }}
+                                                                className="group relative overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-b from-white/[0.08] to-transparent p-4 transition-all hover:border-blue-500/40 hover:from-white/[0.12] hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.15)] cursor-pointer"
+                                                                onClick={() => handleLoadTemplate(template)}
+                                                            >
+                                                                <div className="flex items-center justify-between relative z-10">
+                                                                    <div className="flex-1 min-w-0 pr-4">
+                                                                        <h4 className="font-bold text-white text-lg group-hover:text-blue-300 transition-colors truncate tracking-tight">
+                                                                            {template.name}
+                                                                        </h4>
+                                                                        {template.description && (
+                                                                            <p className="text-sm text-slate-400 mt-1 line-clamp-1 font-medium">
+                                                                                {template.description}
+                                                                            </p>
+                                                                        )}
+                                                                        <div className="flex items-center gap-2 mt-3">
+                                                                            <span className="text-[10px] uppercase tracking-wider font-bold text-blue-400/80 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/10">
+                                                                                Template
+                                                                            </span>
+                                                                            <span className="text-xs text-slate-600">
+                                                                                {new Date(template.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="flex items-center gap-3 shrink-0">
+                                                                        <button
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                (async () => {
+                                                                                    const ok = await api.deleteWorkoutTemplate(template.id);
+                                                                                    if (ok) {
+                                                                                        setTemplates((prev: any[]) => prev.filter((t: any) => t.id !== template.id));
+                                                                                        toast.success(`Deleted template`);
+                                                                                    } else {
+                                                                                        toast.error("Failed to delete template");
+                                                                                    }
+                                                                                })();
+                                                                            }}
+                                                                            className="p-2.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95"
+                                                                            title="Delete template"
+                                                                        >
+                                                                            <Trash2 className="w-4 h-4" />
+                                                                        </button>
+
+                                                                        <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                                                                            <ExternalLink className="w-5 h-5" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </motion.div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>,
+                document.body
             )}
 
             <AnimatePresence mode="wait">
@@ -1132,7 +1243,7 @@ export function WorkoutPlanTab({
                                 </span>
                             </h3>
 
-                            <div className="flex items-center gap-3">
+                            <div ref={actionButtonsRef} className="flex items-center gap-3">
                                 <button
                                     onClick={handleAiGenerate}
                                     disabled={isGenerating}

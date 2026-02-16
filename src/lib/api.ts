@@ -1238,6 +1238,21 @@ export const api = {
             console.error("Error fetching templates:", error);
             return [];
         }
+    },
+
+    deleteWorkoutTemplate: async (id: number) => {
+        if (!isSupabaseConfigured()) return false;
+        try {
+            const { error } = await supabase
+                .from('workout_templates')
+                .delete()
+                .eq('id', id);
+            if (error) throw error;
+            return true;
+        } catch (error) {
+            console.error("Error deleting template:", error);
+            return false;
+        }
     }
 };
 
